@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "301183033387",
+    "project_id": "gastos-diarios-7eb8c",
+    "storage_bucket": "gastos-diarios-7eb8c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301183033387:android:33f1459348095cecd58a6e",
+        "android_client_info": {
+          "package_name": "com.vendetta.gastosdiarios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301183033387-msr37vh60chumbmmvnj4g6hcs1mnsbfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzrklc_o3MrojK8InCtgu96Dpq7JDeo3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301183033387-msr37vh60chumbmmvnj4g6hcs1mnsbfd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

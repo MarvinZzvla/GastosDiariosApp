@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.196" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/drawable/ic_launcher_background.xml" value="0.196" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_finanzas_home.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_home_page.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_nueva_venta.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_nuevo_producto.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_productos_home.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_register_users.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_usuarios_home.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/activity_ventas_home.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Zavala/AndroidStudioProjects/Gastos Diarios - Finanza personal/app/src/main/res/layout/producto_card_layout.xml" value="0.18802083333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>

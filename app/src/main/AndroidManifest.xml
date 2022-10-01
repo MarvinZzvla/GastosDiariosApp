@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="gastosdiarios">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MiInventario"
+        tools:targetApi="31">
+        <activity
+            android:name="com.vendetta.gastosdiarios.EditarProducto"
+            android:exported="false" />
+        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <!-- Personal ID android:value="ca-app-pub-2467116940009132~6454437259" -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2467116940009132~6454437259" />
+
+        <activity
+            android:name="com.vendetta.gastosdiarios.NuevoProducto"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.NuevaVenta"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.PantallaTest"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.UsuariosHome"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.FinanzasHome"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.ProductosHome"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.VentasHome"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.RegisterUsers"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.HomePage"
+            android:exported="false" />
+        <activity
+            android:name="com.vendetta.gastosdiarios.MainActivity"
+            android:exported="true"
+            android:theme="@style/MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
