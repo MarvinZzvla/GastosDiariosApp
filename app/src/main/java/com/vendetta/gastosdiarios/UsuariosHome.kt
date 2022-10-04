@@ -2,17 +2,15 @@ package com.vendetta.gastosdiarios
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vendetta.gastosdiarios.recycler.UsuarioAdapter
 import com.vendetta.gastosdiarios.recycler.Usuarios
@@ -24,16 +22,19 @@ var usuariosProviderList = arrayListOf<Usuarios>()
 
 class UsuariosHome : AppCompatActivity() {
     private var database = ""
-    private var list = arrayListOf<DataSnapshot>()
+    private var list = arrayListOf<QuerySnapshot>()
     private var isAdmin = false
+    val fireData = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_usuarios_home)
         auth = Firebase.auth
+
         banner_usuarios.loadAd(AdRequest.Builder().build())
         loadPreferences()
-        getUsuarios()
+        //getUsuarios()
+        getUsuariosFire()
 
         if(!isAdmin){
             addUser_btn.visibility = View.INVISIBLE
@@ -45,6 +46,21 @@ class UsuariosHome : AppCompatActivity() {
     }
 
 
+    fun getUsuariosFire(){
+        fireData.collection("db1").document(database).collection("Usuarios").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                list.clear()
+                list.add(snapshot)
+                providerUsuariosFire()
+            }
+        }
+    }
+
+
+/*
     fun getUsuarios(){
         Firebase.database.getReference(database).child("Usuarios").addValueEventListener(
             object: ValueEventListener{
@@ -62,6 +78,18 @@ class UsuariosHome : AppCompatActivity() {
         )
     }
 
+*/
+
+    fun providerUsuariosFire(){
+        usuariosProviderList.clear()
+        for (user in list[0].documents){
+            val u = user.data
+            usuariosProviderList.add(Usuarios("${u?.get("name").toString()} ${u?.get("apellido").toString()}",
+            u?.get("email").toString(),u?.get("phone").toString(),u?.get("uid").toString(),u?.get("password").toString()))
+        }
+        initRecycleView()
+    }
+/*
     fun providerUsuarios(){
         usuariosProviderList.clear()
 
@@ -72,6 +100,7 @@ class UsuariosHome : AppCompatActivity() {
 
         initRecycleView()
     }
+    */
 
     fun initRecycleView(){
         var recyclerView = recycleUsuarios

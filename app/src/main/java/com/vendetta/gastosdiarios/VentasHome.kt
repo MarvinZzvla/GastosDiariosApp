@@ -12,18 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vendetta.gastosdiarios.recycler.Ventas
 import com.vendetta.gastosdiarios.recycler.VentasAdapter
 import gastosdiarios.R
 import kotlinx.android.synthetic.main.activity_ventas_home.*
-import kotlinx.android.synthetic.main.card_layout.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 private var database = ""
 private var isAdmin = false
@@ -35,13 +30,16 @@ var daySelected = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 var monthSelected = Calendar.getInstance().get(Calendar.MONTH)+1
 @RequiresApi(Build.VERSION_CODES.N)
 var yearSelected = Calendar.getInstance().get(Calendar.YEAR)
-private var list = arrayListOf<DataSnapshot>()
+private var list = arrayListOf<QuerySnapshot>()
 private var nameProducts = arrayListOf<String>()
 private var precioProducts = arrayListOf<String>()
 private var dateProducts = arrayListOf<String>()
 public var ventasProviderList = arrayListOf<Ventas>()
 
 class VentasHome : AppCompatActivity() {
+
+    val fireData = Firebase.firestore
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +123,7 @@ class VentasHome : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun getVentas(){
 
-         Firebase.database.getReference(database).child("Ventas").addValueEventListener(
+        /* Firebase.database.getReference(database).child("Ventas").addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     list.clear()
@@ -137,15 +135,24 @@ class VentasHome : AppCompatActivity() {
 
                 }
 
-            })
+            })*/
+        fireData.collection("db1").addSnapshotListener { snapshot, error ->
+            if (snapshot != null) {
+                for (user in snapshot.documents){
+                    println("Este es el "  + user.metadata)
+                }
+            }
+        }
 
     }
+
     @RequiresApi(Build.VERSION_CODES.N)
     fun providerVentas() {
         nameProducts.clear()
         precioProducts.clear()
         dateProducts.clear()
         ventasProviderList.clear()
+        /*
         var ventasHoy = list[0].child(yearSelected.toString()).child(monthSelected.toString()).child(
             daySelected.toString()).children
 
@@ -155,8 +162,12 @@ class VentasHome : AppCompatActivity() {
                 dateProducts.add(it.child("date").value.toString())
                 ventasProviderList.add(Ventas(it.child("name").value.toString(),
                     it.child("date").value.toString(), it.child("precio").value.toString(),it.child("cantidad").value.toString()))
-            }
-        initRecycleView()
+            }*/
+
+       // println("Este es la lista " + list[0].isEmpty)
+
+
+       // initRecycleView()
 
 
     }

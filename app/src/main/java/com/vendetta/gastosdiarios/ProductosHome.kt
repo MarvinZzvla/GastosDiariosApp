@@ -14,6 +14,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vendetta.gastosdiarios.recycler.Productos
 import com.vendetta.gastosdiarios.recycler.ProductosAdapter
@@ -22,11 +24,13 @@ import kotlinx.android.synthetic.main.activity_productos_home.*
 
 private var database = ""
 private lateinit var auth: FirebaseAuth
-private var list = arrayListOf<DataSnapshot>()
+private var list = arrayListOf<QuerySnapshot>()
+
 var productosProviderList = arrayListOf<Productos>()
 
 class ProductosHome : AppCompatActivity() {
-    @RequiresApi(Build.VERSION_CODES.N)
+    private val fireData = Firebase.firestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_productos_home)
@@ -40,7 +44,35 @@ class ProductosHome : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    fun getProductos(){
+        fireData.collection("db1").document(database).collection("Productos").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                list.clear()
+                list.add(snapshot)
+                providerProductos()
+            }
+        }
+    }
+
+    fun providerProductos(){
+        productosProviderList.clear()
+        for(producto in list[0].documents){
+            val p = producto.data
+            productosProviderList.add(Productos(p?.get("name").toString(),p?.get("precio").toString(),
+                "Cantidad: ${p?.get("cantidad").toString()}"))
+
+        }
+        productosProviderList.sortBy {
+            it.cantidad.reversed()
+        }
+
+        initRecycleView()
+    }
+
+    /*
     fun getProductos(){
 
         Firebase.database.getReference(database).child("Productos").addValueEventListener(
@@ -56,9 +88,9 @@ class ProductosHome : AppCompatActivity() {
                 }
 
             })
-    }
+    }*/
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    /*
     fun providerProductos() {
         productosProviderList.clear()
 
@@ -75,7 +107,7 @@ class ProductosHome : AppCompatActivity() {
 
         initRecycleView()
 
-    }
+    }*/
 
     fun initRecycleView(){
         val recyclerView = recycleProductos
