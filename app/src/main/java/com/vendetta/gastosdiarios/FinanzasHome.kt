@@ -13,6 +13,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import gastosdiarios.R
 import kotlinx.android.synthetic.main.activity_finanzas_home.*
@@ -25,8 +30,11 @@ class FinanzasHome : AppCompatActivity() {
     private var yearSelected = Calendar.getInstance().get(Calendar.YEAR).toString()
     private var database = ""
     private var list = arrayListOf<DataSnapshot>()
+    private var mylist = arrayListOf<DocumentReference>()
     private var listMes = arrayListOf<String>("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto",
     "Septiembre","Octubre","Noviembre","Diciembre")
+    val fireData = Firebase.firestore
+    var ventasYear = "0"; var gananciasYear = "0"; var ventasMonth = "0"; var gananciasMonth = "0"; var ventasToday ="0"; var gananciasToday="0"
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,30 +60,33 @@ class FinanzasHome : AppCompatActivity() {
         loadInfoDatabase()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun loadInfoDatabase(){
-        Firebase.database.getReference(database).child("Finanzas").addValueEventListener(
-            object : ValueEventListener{
-                @RequiresApi(Build.VERSION_CODES.N)
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    list.clear()
-                    list.add(snapshot)
-                    readInfo()
+      readFireStore()
 
-                }
+    }
 
-                override fun onCancelled(error: DatabaseError) {
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun readFireStore(){
 
-                }
+        fireData.collection("db1").document(database).collection("Finanzas").document(yearSelected).get().addOnSuccessListener {
+            ventasYear = it.data?.get("ventas").toString()
+            gananciasYear = it.data?.get("ganancias").toString()
+            fireData.collection("db1").document(database).collection("Finanzas").document(yearSelected).collection(monthSelected).document("ventas").get().addOnSuccessListener {
+                ventasMonth = it.data?.get("ventas").toString()
+                if (ventasMonth == "null"){ventasMonth="0"}
 
+                println("Ventas año " + ventasYear + "Ganancias Año " + gananciasYear + "Ventas mes " + ventasMonth)
+                readInfo()
             }
-        )
+        }
     }
 
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.N)
     fun readInfo(){
-
+/*
         var ventasToday = list[0].child(yearSelected).child(monthSelected).child(
             daySelected
         ).child("ventas").value
@@ -83,9 +94,7 @@ class FinanzasHome : AppCompatActivity() {
         var ventasMonth =  list[0].child(yearSelected).child(monthSelected).child("ventas").value
         var ventasYear = list[0].child(yearSelected).child("ventas").value
 
-        fechaHoyFinanzas.text = "$daySelected/$monthSelected/$yearSelected"
-        fechaMesFinanzas.text = "${listMes[(monthSelected.toInt()-1)]} $yearSelected"
-        fechaYearFinanzas.text = yearSelected
+
 
         var gananciasToday = list[0].child(yearSelected).child(monthSelected).child(
             daySelected
@@ -93,10 +102,13 @@ class FinanzasHome : AppCompatActivity() {
         var gananciasMonth =  list[0].child(yearSelected).child(monthSelected).child("ganancias").value
         var gananciasYear = list[0].child(yearSelected).child("ganancias").value
 
-
+*/
+        fechaHoyFinanzas.text = "$daySelected/$monthSelected/$yearSelected"
+        fechaMesFinanzas.text = "${listMes[(monthSelected.toInt()-1)]} $yearSelected"
+        fechaYearFinanzas.text = yearSelected
 
         ventasHoyText.text = "$${ventasToday?:0.toString()}"
-        ventasMesText.text =  "$${ventasMonth?:0.toString()}"
+        ventasMesText.text =  "$${ventasMonth}"
         ventasYearText.text = "$${ventasYear?:0.toString()}"
 
         ventasGananciasToday.text = "$${gananciasToday?:"0".toString()}"
@@ -117,7 +129,7 @@ class FinanzasHome : AppCompatActivity() {
             monthSelected = (myCalendar.get(Calendar.MONTH) + 1).toString()
             yearSelected = myCalendar.get(Calendar.YEAR).toString()
 
-            readInfo()
+            readFireStore()
 
         }
 

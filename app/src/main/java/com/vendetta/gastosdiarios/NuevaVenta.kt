@@ -13,6 +13,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import gastosdiarios.R
@@ -226,6 +227,8 @@ class NuevaVenta : AppCompatActivity() {
             //updateFinanzas(dateToday,timeNow)
             updateFinanzasFire(dateToday,timeNow)
             //updateGanancias(dateToday,timeNow)
+            updateGanaciasFire(dateToday,timeNow)
+
 
             Intent(this,VentasHome::class.java).apply { startActivity(this) }
         }
@@ -235,6 +238,37 @@ class NuevaVenta : AppCompatActivity() {
         }
         }
 
+
+    fun updateGanaciasFire(dateToday: String, timeNow: String) {
+        var countDay = 0; var countMonth = 0; var countYear = 0;
+        var precioProduccion = 0
+        var dateMonth = "${myCalendar.time.year+1900}/${myCalendar.time.month + 1}"
+        var dateYear = "${myCalendar.time.year+1900}"
+
+        //Obtener el precio produccion del producto
+        fireData.collection("db1").document(database).collection("Productos").document(producto).get().addOnSuccessListener {
+            precioProduccion = it.data?.get("precio").toString().toInt()
+        }
+        //Obtener ganancias y sumarles las nuevas ganancias del dia de hoy
+        fireData.collection("db1").document(database).collection("Finanzas").document(dateToday).get().addOnSuccessListener {
+            if(!it.exists()){countDay = (nuevoPrecio_ventas.text.toString().toInt() - precioProduccion)*cantidad }
+            else{ countDay = it.data?.get("ganancias").toString().toInt() + ((nuevoPrecio_ventas.text.toString().toInt() - precioProduccion)*cantidad)}
+            fireData.collection("db1").document(database).collection("Finanzas").document(dateToday).set(hashMapOf("ganancias" to countDay.toString()),SetOptions.merge())
+
+            //Obtener las ganancias del mes y sumarles las nuevas ganancias del dia de hoy
+            fireData.collection("db1").document(database).collection("Finanzas").document(dateMonth+"/ganancias").get().addOnSuccessListener {
+                if(!it.exists()){countMonth = (nuevoPrecio_ventas.text.toString().toInt() - precioProduccion)*cantidad}
+                else{countMonth= it.data?.get("ganancias").toString().toInt() + ((nuevoPrecio_ventas.text.toString().toInt() - precioProduccion)*cantidad)}
+                fireData.collection("db1").document(database).collection("Finanzas").document(dateMonth+"/ganancias").set(hashMapOf("ganancias" to countMonth.toString()))
+
+                fireData.collection("db1").document(database).collection("Finanzas").document(dateYear).get().addOnSuccessListener {
+                    if(!it.exists()){countYear = (nuevoPrecio_ventas.text.toString().toInt() - precioProduccion) * cantidad}
+                    else{countYear = it.data?.get("ganancias").toString().toInt() + ((nuevoPrecio_ventas.text.toString().toInt() - precioProduccion)*cantidad)}
+                    fireData.collection("db1").document(database).collection("Finanzas").document(dateYear).set(hashMapOf("ganancias" to countYear.toString()),SetOptions.merge())
+                }
+            }
+        }
+    }
 
 
     fun updateGanancias(dateToday: String, timeNow: String) {
@@ -285,7 +319,6 @@ class NuevaVenta : AppCompatActivity() {
 
     fun updateFinanzasFire(dateToday: String, timeNow: String) {
         var countDay = 0; var countMonth = 0; var countYear = 0;
-        var precioProduccion = 0
         var dateMonth = "${myCalendar.time.year+1900}/${myCalendar.time.month + 1}"
         var dateYear = "${myCalendar.time.year+1900}"
 

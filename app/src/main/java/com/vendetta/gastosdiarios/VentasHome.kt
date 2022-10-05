@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -123,6 +124,7 @@ class VentasHome : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun getVentas(){
 
+
         /* Firebase.database.getReference(database).child("Ventas").addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -136,12 +138,14 @@ class VentasHome : AppCompatActivity() {
                 }
 
             })*/
-        fireData.collection("db1").addSnapshotListener { snapshot, error ->
-            if (snapshot != null) {
-                for (user in snapshot.documents){
-                    println("Este es el "  + user.metadata)
-                }
-            }
+        fireData.collection("db1").document(database).collection("Ventas").document(database)
+            .collection(yearSelected.toString()).document(monthSelected.toString()).collection(
+                daySelected.toString()).addSnapshotListener { snapshot, error ->
+           if (snapshot != null) {
+               list.clear()
+               list.add(snapshot)
+               providerVentas()
+           }
         }
 
     }
@@ -152,6 +156,18 @@ class VentasHome : AppCompatActivity() {
         precioProducts.clear()
         dateProducts.clear()
         ventasProviderList.clear()
+
+
+/*** NUEVA BASE DE DATOS *******/
+        for (ventas in list[0].documents){
+            nameProducts.add(ventas.data?.get("name").toString())
+            precioProducts.add(ventas.data?.get("precio").toString())
+            dateProducts.add(ventas.data?.get("date").toString())
+            ventasProviderList.add(Ventas(ventas.data?.get("name").toString(), ventas.data?.get("date").toString(),
+            ventas.data?.get("precio").toString(),ventas.data?.get("cantidad").toString()))
+            }
+        initRecycleView()
+
         /*
         var ventasHoy = list[0].child(yearSelected.toString()).child(monthSelected.toString()).child(
             daySelected.toString()).children
