@@ -41,6 +41,8 @@ class FinanzasHome : AppCompatActivity() {
         setContentView(R.layout.activity_finanzas_home)
         banner_finanzas.loadAd(AdRequest.Builder().build())
         loadPreferences()
+        initCalendar()
+        loadInfoDatabase()
 
         showGanancias.setOnClickListener {
             if (showGanancias.isChecked){
@@ -56,8 +58,7 @@ class FinanzasHome : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onStart() {
         super.onStart()
-        initCalendar()
-        loadInfoDatabase()
+
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -76,10 +77,29 @@ class FinanzasHome : AppCompatActivity() {
                 ventasMonth = it.data?.get("ventas").toString()
                 if (ventasMonth == "null"){ventasMonth="0"}
 
-                println("Ventas año " + ventasYear + "Ganancias Año " + gananciasYear + "Ventas mes " + ventasMonth)
-                readInfo()
+
+                fireData.collection("db1").document(database).collection("Finanzas").document("$yearSelected/$monthSelected/$daySelected").get().addOnSuccessListener {
+                    ventasToday = it.data?.get("ventas").toString()
+                    if(ventasToday == "null"){ventasToday="0"}
+
+                    fireData.collection("db1").document(database).collection("Finanzas").document(yearSelected).collection(monthSelected).document("ganancias").get().addOnSuccessListener {
+                        gananciasMonth = it.data?.get("ganancias").toString()
+                        if(gananciasMonth == "null"){gananciasMonth = "0"}
+
+                        fireData.collection("db1").document(database).collection("Finanzas").document("$yearSelected/$monthSelected/$daySelected").get().addOnSuccessListener {
+                            gananciasToday = it.data?.get("ganancias").toString()
+                            if(gananciasToday == "null"){gananciasToday = "0"}
+                            readInfo()
+                        }
+
+                    }
+
+                }
+
             }
         }
+
+
     }
 
 

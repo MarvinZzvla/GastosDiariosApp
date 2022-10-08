@@ -93,7 +93,7 @@ class VentasHome : AppCompatActivity() {
             myCalendar.set(Calendar.MONTH, month)
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateLable(myCalendar)
-            providerVentas()
+            getVentas()/**Cambios**/
 
 
         }
